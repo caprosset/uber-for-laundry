@@ -28,10 +28,10 @@ mongoose
     console.error('Error connecting to mongo', err);
   });
 
+  const indexRouter = require('./routes/index');
+  const usersRouter = require('./routes/users');
   const authRouter = require('./routes/auth');
-const indexRouter = require('./routes/index');
 const laundryRouter = require('./routes/laundry'); 
-const usersRouter = require('./routes/users');
 
 const app = express();
 
@@ -77,10 +77,12 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/', authRouter);
 app.use('/', indexRouter); 
-app.use('/', laundryRouter); 
 app.use('/users', usersRouter);
+app.use('/', authRouter);
+app.use('/', laundryRouter); 
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
