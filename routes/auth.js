@@ -98,6 +98,25 @@ router.post('/login', async (req, res, next) => {
 })
 
 
+// GET /logout 
+router.get('/logout', (req, res, next) => {
+  // si el usuario no esta logueado, redirigir a la home
+  if (!req.session.currentUser) {
+    res.redirect('/');
+    return;
+  }
+
+  // si esta logueado, cerrar (borrar) la sesion y redireccionar a la página de inicio
+  req.session.destroy((err) => {
+    if (err) {
+      next(err);
+      return;
+    }
+
+    res.redirect('/');
+  });
+});
+
 
 module.exports = router;
 

@@ -29,8 +29,9 @@ mongoose
   });
 
 const indexRouter = require('./routes/index');
-const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
+
 
 const app = express();
 
