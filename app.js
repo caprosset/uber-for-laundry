@@ -60,7 +60,8 @@ app.use(session({
   })
 }));
 
-// 
+
+// Locals con la información de la sesión
 app.use((req, res, next) => {
   if (req.session.currentUser) {
     res.locals.currentUserInfo = req.session.currentUser; // contiene la información del usuario de la sesión (solo disponible si ha iniciado sesión)
@@ -72,7 +73,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routas
+
+// Rutas
 app.use('/', indexRouter); 
 app.use('/', authRouter);
 app.use('/', laundryRouter); 

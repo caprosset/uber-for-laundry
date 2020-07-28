@@ -46,9 +46,10 @@ router.post('/signup', async (req, res, next) => {
     const userToCreate = new User(newUser); 
 
     // ... y guardarla en la BD con el metodo save() de mongoose
-    await userToCreate.save();
+    const savedUser = await userToCreate.save();
 
-    // si todo sale según lo planeado, redirigir a la home
+    // si todo sale según lo planeado, guardar la información del usuario en la sesión (loguearlo) y redirigir a la página de inicio
+    req.session.currentUser = savedUser;
     res.redirect('/');
   } 
   catch(err) {
