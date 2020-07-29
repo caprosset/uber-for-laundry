@@ -12,7 +12,50 @@ router.get('/signup', (req, res, next) => {
   res.render('auth/signup', { errorMessage: '' });
 })
 
-// POST /signup ==> envía la informacion del usuario y lo crea en la base de datos
+/*
+// POST /signup ===> recoge la informacion del usuario y lo crea en la base de datos
+// con PROMISES
+authRouter.post('/signup', (req, res, next) => {
+  console.log('req.body', req.body);
+
+  const { name, email, password } = req.body;
+
+  // si el campo del email o de la contraseña están en blanco, mostrar mensaje de error
+  if(email === "" || password === "") {
+    res.render('auth/signup', { errorMessage: "Enter both email and password "});
+    return;
+  }
+
+  // sino, comprobar en la BD si un usuario con este email no existe aún
+  User.findOne({ email })
+  .then( (foundUser) => {
+   // si el usuario ya existe, mostrar mensaje de error
+    if(foundUser) {
+      res.render('auth/signup', { errorMessage: `There's already an account with the email ${email}`});
+      return;
+    }
+
+    // si todo sale bien, encriptar contraseña
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    // Guardar el usuario en la BDD
+    // const newUser = { name, email, password: hashedPassword };
+
+    User.create({ name, email, password: hashedPassword })
+    .then( () => {
+      res.redirect('/login');
+    })
+    .catch( (err) => {
+      res.render('auth/signup', { errorMessage: "Error while creating account. Please try again."})
+    });
+  })
+  .catch( (err) => console.log(err));
+})
+*/
+
+// POST /signup ==> recoge la informacion del usuario y lo crea en la base de datos
+// con ASYNC/AWAIT
 router.post('/signup', async (req, res, next) => {
   const { name, email, password } = req.body;
   
@@ -25,7 +68,6 @@ router.post('/signup', async (req, res, next) => {
   try {
     // sino, comprobar en la BD si un usuario con este email no existe aún
     const existingUser = await User.findOne({ email });
-    console.log('existingUser :>> ', existingUser);
     
     // si el usuario ya existe, mostrar mensaje de error
     if(existingUser !== null) {
@@ -33,7 +75,7 @@ router.post('/signup', async (req, res, next) => {
       return;
     }
 
-    // sino, encriptar contrasena
+    // si todo sale bien, encriptar contraseña
     const salt = bcrypt.genSaltSync(saltRound);
     const hashedPass = bcrypt.hashSync(password, salt);
 
@@ -49,7 +91,7 @@ router.post('/signup', async (req, res, next) => {
     const savedUser = await userToCreate.save();
 
     // si todo sale según lo planeado, guardar la información del usuario en la sesión (loguearlo) y redirigir a la página de inicio
-    req.session.currentUser = savedUser;
+    // req.session.currentUser = savedUser; // solo funciona si esta configurado el session middleware 
     res.redirect('/');
   } 
   catch(err) {
