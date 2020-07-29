@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const bcrypt = require('bcryptjs');
-const saltRound = 10;
+const saltRounds = 10;
 
 const User = require('../models/user');
 
@@ -15,7 +15,7 @@ router.get('/signup', (req, res, next) => {
 /*
 // POST /signup ===> recoge la informacion del usuario y lo crea en la base de datos
 // con PROMISES
-authRouter.post('/signup', (req, res, next) => {
+router.post('/signup', (req, res, next) => {
   console.log('req.body', req.body);
 
   const { name, email, password } = req.body;
@@ -76,7 +76,7 @@ router.post('/signup', async (req, res, next) => {
     }
 
     // si todo sale bien, encriptar contraseña
-    const salt = bcrypt.genSaltSync(saltRound);
+    const salt = bcrypt.genSaltSync(saltRounds);
     const hashedPass = bcrypt.hashSync(password, salt);
 
     // crear una nueva instancia del model User, con la contraseña encriptada
@@ -98,6 +98,7 @@ router.post('/signup', async (req, res, next) => {
     res.render('auth/signup', { errorMessage: 'Something went wrong. Try again later.' });
   }
 });
+
 
 
 // GET /login ==> renderiza el formulario de inicio de sesión
@@ -139,6 +140,7 @@ router.post('/login', async (req, res, next) => {
     next(error);
   }
 })
+
 
 
 // GET /logout 
